@@ -59,15 +59,15 @@ export function Home() {
   const debouncedSearchPublications = useMemo(
     () =>
       debounce(async (query) => {
-        // api
-        //   .get(`/search/issues?q=${query}%20repo:${user}/${repo}/`)
-        //   .then((response) => {
-        //     setPublications(response.data.items)
-        // setSearchResultAmount(response.data.items.length)
-        //   })
-        //   .catch((error) => {
-        //     console.log(error)
-        //   })
+        api
+          .get(`/search/issues?q=${query}%20repo:${user}/${repo}/`)
+          .then((response) => {
+            setPublications(response.data.items)
+            setSearchResultAmount(response.data.items.length)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
         console.log(query)
       }, 1000),
     [],

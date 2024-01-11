@@ -4,42 +4,50 @@ import { faBuilding, faUserGroup } from '@fortawesome/free-solid-svg-icons'
 import { BioContainer } from './styles'
 import { IBio } from '../../../../@types/IBio'
 
-export function Bio({
-  img,
-  name,
-  githubLink,
-  description,
-  githubUser,
-  company,
-  followers,
-}: IBio) {
-  const followersText = followers === 1 ? 'seguidor' : 'seguidores'
+export function Bio(infos: IBio) {
+  const followersText = infos.followers === 1 ? 'seguidor' : 'seguidores'
 
   return (
     <BioContainer>
-      <img src={img} alt={name} />
-      <div className="infoContainer">
-        <div className="name">
-          <h2>{name}</h2>
-          <a href={githubLink} target="_blank" rel="noopener noreferrer">
-            github
-          </a>
-        </div>
-        <p className="description">{description}</p>
-        <ul className="info">
-          <li>
-            <FontAwesomeIcon icon={faGithub} /> {githubUser}
-          </li>
-          {company && (
-            <li>
-              <FontAwesomeIcon icon={faBuilding} /> {company}
-            </li>
-          )}
-          <li>
-            <FontAwesomeIcon icon={faUserGroup} /> {followers} {followersText}
-          </li>
-        </ul>
-      </div>
+      {infos && (
+        <>
+          <img src={infos.img} alt={infos.name} />
+          <div className="infoContainer">
+            <div className="name">
+              <h2>{infos.name}</h2>
+              <a
+                href={infos.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                github
+              </a>
+            </div>
+            {infos.description && (
+              <p className="description">{infos.description}</p>
+            )}
+            <ul className="info">
+              {infos.githubUser && (
+                <li>
+                  <FontAwesomeIcon icon={faGithub} /> {infos.githubUser}
+                </li>
+              )}
+              {infos.company && (
+                <li>
+                  <FontAwesomeIcon icon={faBuilding} /> {infos.company}
+                </li>
+              )}
+              {infos.followers && (
+                <li>
+                  <FontAwesomeIcon icon={faUserGroup} /> {infos.followers}{' '}
+                  {followersText}
+                </li>
+              )}
+            </ul>
+          </div>
+        </>
+      )}
+      {!infos && <p>Algo deu errado 💩</p>}
     </BioContainer>
   )
 }
