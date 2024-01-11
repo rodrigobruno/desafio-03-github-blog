@@ -29,6 +29,8 @@ export const PublicationContainer = styled(Link)`
     time {
       color: ${(props) => props.theme['blue-300']};
       font-size: 0.875rem;
+      line-height: 130%;
+
       &:first-letter {
         text-transform: uppercase;
       }

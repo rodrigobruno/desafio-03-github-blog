@@ -45,15 +45,10 @@ export function Home() {
   }, [])
 
   const loadInitialPublications = useCallback(async () => {
-    api
-      .get(`/repos/${user}/${repo}/issues`)
-      .then((response) => {
-        setPublications(response.data)
-        setSearchResultAmount(response.data.length)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    api.get(`/repos/${user}/${repo}/issues`).then((response) => {
+      setPublications(response.data)
+      setSearchResultAmount(response.data.length)
+    })
   }, [])
 
   const debouncedSearchPublications = useMemo(
@@ -65,10 +60,7 @@ export function Home() {
             setPublications(response.data.items)
             setSearchResultAmount(response.data.items.length)
           })
-          .catch((error) => {
-            console.log(error)
-          })
-      }, 1000),
+      }, 500),
     [],
   )
 

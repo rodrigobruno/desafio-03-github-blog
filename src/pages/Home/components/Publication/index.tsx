@@ -10,9 +10,9 @@ export default function Publication({
   anchor,
 }: IPublications) {
   const truncatePublicationContent = (text: string) => {
-    const maxLength = 180
+    const maxLength = 165
 
-    if (text.length <= 180) {
+    if (text.length <= maxLength) {
       return text
     }
 
