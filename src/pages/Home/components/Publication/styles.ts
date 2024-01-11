@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const PublicationContainer = styled.a`
-  flex-basis: 50%;
+export const PublicationContainer = styled(Link)`
+  /* flex-basis: 50%; */
   text-decoration: none;
 
   article {

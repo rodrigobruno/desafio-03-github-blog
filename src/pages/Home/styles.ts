@@ -46,7 +46,8 @@ export const PublicationsContainer = styled.main`
   }
 
   .publications {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 `

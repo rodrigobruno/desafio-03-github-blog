@@ -1,20 +1,14 @@
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { PublicationContainer } from './styles'
-
-interface PublicationProps {
-  title: string
-  time: string
-  text: string
-  anchor: string
-}
+import { IPublications } from '../../../../@types/IPublications'
 
 export default function Publication({
   title,
   time,
   text,
   anchor,
-}: PublicationProps) {
+}: IPublications) {
   const truncatePublicationContent = (text: string) => {
     const maxLength = 180
 
@@ -40,7 +34,7 @@ export default function Publication({
 
   return (
     <>
-      <PublicationContainer href={anchor}>
+      <PublicationContainer to={`post/${anchor}`}>
         <article>
           <h3>{title}</h3>
           <time dateTime={publishedDateISO}>{publishedDateRelativeToNow}</time>

@@ -5,12 +5,20 @@ import { Bio } from './components/Bio'
 import api from '../../http/api'
 import Publication from './components/Publication'
 
+interface Issue {
+  id: number
+  title: string
+  created_at: string
+  body: string
+  number: number
+}
+
 export function Home() {
   const [bio, setBio] = useState<IBio>({} as IBio)
+  const [publications, setPublications] = useState<Issue[]>([])
+  const user = 'rodrigobruno'
 
   const loadBio = useCallback(async () => {
-    const user = 'rodrigobruno'
-
     api
       .get(`/users/${user}`)
       .then((response) => {
@@ -29,8 +37,22 @@ export function Home() {
       })
   }, [])
 
+  const loadInitialPublications = useCallback(async () => {
+    const repo = 'github-blog'
+
+    api
+      .get(`/repos/${user}/${repo}/issues`)
+      .then((response) => {
+        setPublications(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
+
   useEffect(() => {
     loadBio()
+    loadInitialPublications()
   }, [])
 
   return (
@@ -45,20 +67,17 @@ export function Home() {
           <input type="text" placeholder="Buscar conteúdo" />
         </section>
         <section className="publications">
-          <Publication
-            title="JavaScript data types and data structures"
-            time="2024-01-10"
-            text="Programming languages all have built-in data structures, but these
-            often differ from one language to another. This article attempts
-            to list the built-in data structures available in JavaScript and
-            what properties they have. These can be used to build other data
-            structures. Wherever possible, comparisons with other languages
-            are drawn. Dynamic typing JavaScript is a loosely typed and
-            dynamic language. Variables in JavaScript are not directly
-            associated with any particular value type, and any variable can be
-            assigned values of all types"
-            anchor="#"
-          />
+          {publications.map((publication) => {
+            return (
+              <Publication
+                key={publication.id}
+                title={publication.title}
+                time={publication.created_at}
+                text={publication.body}
+                anchor={publication.number}
+              />
+            )
+          })}
         </section>
       </PublicationsContainer>
     </>
