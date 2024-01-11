@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { PublicationContainer } from './styles'
 import { IPublications } from '../../../../@types/IPublications'
@@ -27,6 +27,15 @@ export default function Publication({
 
   const publishedAt = new Date(time)
   const publishedDateISO = publishedAt.toISOString()
+
+  const publishedDateFormatted = format(
+    publishedAt,
+    "d 'de' LLLL 'às' HH:mm'h'",
+    {
+      locale: ptBR,
+    },
+  )
+
   const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
     locale: ptBR,
     addSuffix: true,
@@ -37,7 +46,9 @@ export default function Publication({
       <PublicationContainer to={`post/${anchor}`}>
         <article>
           <h3>{title}</h3>
-          <time dateTime={publishedDateISO}>{publishedDateRelativeToNow}</time>
+          <time dateTime={publishedDateISO} title={publishedDateFormatted}>
+            {publishedDateRelativeToNow}
+          </time>
           <p>{truncatePublicationContent(text)}</p>
         </article>
       </PublicationContainer>

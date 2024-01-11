@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { debounce } from 'lodash'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { IBio } from '../../@types/IBio'
 import { PublicationsContainer } from './styles'
-import { Bio } from './components/Bio'
 import api from '../../http/api'
+import { Bio } from './components/Bio'
 import Publication from './components/Publication'
 
 interface Issue {
@@ -16,7 +19,11 @@ interface Issue {
 export function Home() {
   const [bio, setBio] = useState<IBio>({} as IBio)
   const [publications, setPublications] = useState<Issue[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResultAmount, setSearchResultAmount] = useState(0)
+
   const user = 'rodrigobruno'
+  const repo = 'github-blog'
 
   const loadBio = useCallback(async () => {
     api
@@ -38,22 +45,44 @@ export function Home() {
   }, [])
 
   const loadInitialPublications = useCallback(async () => {
-    const repo = 'github-blog'
-
     api
       .get(`/repos/${user}/${repo}/issues`)
       .then((response) => {
         setPublications(response.data)
+        setSearchResultAmount(response.data.length)
       })
       .catch((error) => {
         console.log(error)
       })
   }, [])
 
+  const debouncedSearchPublications = useMemo(
+    () =>
+      debounce(async (query) => {
+        // api
+        //   .get(`/search/issues?q=${query}%20repo:${user}/${repo}/`)
+        //   .then((response) => {
+        //     setPublications(response.data.items)
+        // setSearchResultAmount(response.data.items.length)
+        //   })
+        //   .catch((error) => {
+        //     console.log(error)
+        //   })
+        console.log(query)
+      }, 1000),
+    [],
+  )
+
+  function handleSearchPublications(e: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target
+    setSearchTerm(value)
+    debouncedSearchPublications(value)
+  }
+
   useEffect(() => {
     loadBio()
     loadInitialPublications()
-  }, [])
+  }, [loadBio, loadInitialPublications])
 
   return (
     <>
@@ -62,22 +91,40 @@ export function Home() {
         <section className="search">
           <div className="title">
             <h2>Publicações</h2>
-            <span>6 publicações</span>
+            <span>
+              {searchResultAmount}{' '}
+              {searchResultAmount === 1 ? 'publicação' : 'publicações'}
+            </span>
           </div>
-          <input type="text" placeholder="Buscar conteúdo" />
+          <div className="input">
+            <input
+              type="search"
+              onChange={handleSearchPublications}
+              value={searchTerm}
+              placeholder="Buscar conteúdo"
+            />
+            {searchTerm === '' && (
+              <span>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </span>
+            )}
+          </div>
         </section>
         <section className="publications">
-          {publications.map((publication) => {
-            return (
-              <Publication
-                key={publication.id}
-                title={publication.title}
-                time={publication.created_at}
-                text={publication.body}
-                anchor={publication.number}
-              />
-            )
-          })}
+          {publications.length > 0 &&
+            publications.map((publication) => {
+              return (
+                <Publication
+                  key={publication.id}
+                  title={publication.title}
+                  time={publication.created_at}
+                  text={publication.body}
+                  anchor={publication.number}
+                />
+              )
+            })}
+
+          {publications.length < 1 && <p>Nenhuma publicação 😞</p>}
         </section>
       </PublicationsContainer>
     </>
