@@ -68,7 +68,6 @@ export function Home() {
           .catch((error) => {
             console.log(error)
           })
-        console.log(query)
       }, 1000),
     [],
   )
