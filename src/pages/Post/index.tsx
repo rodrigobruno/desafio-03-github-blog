@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Title } from './components/Title'
 import { api } from '../../http/api'
+import Content from './components/Content'
 
 interface IPublication {
   title: string
@@ -56,15 +57,18 @@ export function Post() {
   }
 
   return (
-    <>
-      <Title
-        title={publication.title}
-        githubLink={publication.html_url}
-        githubUser={publication.login}
-        time={publication.created_at}
-        comments={publication.comments}
-        error={loadPublicationError}
-      />
-    </>
+    <main>
+      <article>
+        <Title
+          title={publication.title}
+          githubLink={publication.html_url}
+          githubUser={publication.login}
+          time={publication.created_at}
+          comments={publication.comments}
+          error={loadPublicationError}
+        />
+        <Content body={publication.body} />
+      </article>
+    </main>
   )
 }

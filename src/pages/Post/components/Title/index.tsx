@@ -7,6 +7,7 @@ import {
   dateISO,
   dateRelativeToNow,
 } from '../../../../utils/dateFormat'
+import { Link } from 'react-router-dom'
 
 interface TitleProps {
   title: string
@@ -32,9 +33,9 @@ export function Title({
       {!error && (
         <>
           <nav>
-            <a href="#" className="back">
+            <Link to="/" className="back">
               Voltar
-            </a>
+            </Link>
             <a href={githubLink} target="_blank" rel="noopener noreferrer">
               Ver no GitHub
             </a>
