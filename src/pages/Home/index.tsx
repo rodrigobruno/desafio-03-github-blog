@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { IBio } from '../../@types/IBio'
 import { PublicationsContainer } from './styles'
-import api from '../../http/api'
+import { api } from '../../http/api'
 import { Bio } from './components/Bio'
 import Publication from './components/Publication'
 
@@ -21,6 +21,7 @@ export function Home() {
   const [publications, setPublications] = useState<Issue[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResultAmount, setSearchResultAmount] = useState(0)
+  const [loadBioError, setLoadBioError] = useState(false)
 
   const user = 'rodrigobruno'
   const repo = 'github-blog'
@@ -41,6 +42,7 @@ export function Home() {
       })
       .catch((error) => {
         console.log(error)
+        setLoadBioError(true)
       })
   }, [])
 
@@ -77,7 +79,7 @@ export function Home() {
 
   return (
     <>
-      <Bio {...bio} />
+      <Bio {...bio} error={loadBioError} />
       <PublicationsContainer>
         <section className="search">
           <div className="title">

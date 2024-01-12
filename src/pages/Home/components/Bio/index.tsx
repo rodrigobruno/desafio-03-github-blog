@@ -4,42 +4,51 @@ import { faBuilding, faUserGroup } from '@fortawesome/free-solid-svg-icons'
 import { BioContainer } from './styles'
 import { IBio } from '../../../../@types/IBio'
 
-export function Bio(infos: IBio) {
-  const followersText = infos.followers === 1 ? 'seguidor' : 'seguidores'
+interface BioProps extends IBio {
+  error: boolean
+}
+
+export function Bio({
+  img,
+  name,
+  githubLink,
+  description,
+  githubUser,
+  company,
+  followers,
+  error,
+}: BioProps) {
+  const followersText = followers === 1 ? 'seguidor' : 'seguidores'
 
   return (
     <BioContainer>
-      {infos && (
+      {!error && (
         <>
-          <img src={infos.img} alt={infos.name} />
+          <img src={img} alt={name} />
           <div className="infoContainer">
             <div className="name">
-              <h2>{infos.name}</h2>
-              <a
-                href={infos.githubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                github
-              </a>
+              <h2>{name}</h2>
+              {githubLink && (
+                <a href={githubLink} target="_blank" rel="noopener noreferrer">
+                  github
+                </a>
+              )}
             </div>
-            {infos.description && (
-              <p className="description">{infos.description}</p>
-            )}
+            {description && <p className="description">{description}</p>}
             <ul className="info">
-              {infos.githubUser && (
+              {githubUser && (
                 <li>
-                  <FontAwesomeIcon icon={faGithub} /> {infos.githubUser}
+                  <FontAwesomeIcon icon={faGithub} /> {githubUser}
                 </li>
               )}
-              {infos.company && (
+              {company && (
                 <li>
-                  <FontAwesomeIcon icon={faBuilding} /> {infos.company}
+                  <FontAwesomeIcon icon={faBuilding} /> {company}
                 </li>
               )}
-              {infos.followers && (
+              {followers && (
                 <li>
-                  <FontAwesomeIcon icon={faUserGroup} /> {infos.followers}{' '}
+                  <FontAwesomeIcon icon={faUserGroup} /> {followers}{' '}
                   {followersText}
                 </li>
               )}
@@ -47,7 +56,7 @@ export function Bio(infos: IBio) {
           </div>
         </>
       )}
-      {!infos && <p>Algo deu errado 💩</p>}
+      {error && <p>Algo deu errado 💩</p>}
     </BioContainer>
   )
 }
